@@ -3,10 +3,17 @@ let s:source = {
 \   'description' : 'Incremental search for vim-dirvish',
 \   'default_action' : {'common' : 'dirvish_down'},
 \   'action_table' : {},
+\   'hooks' : {},
 \ }
 
 function! unite#sources#dirvish#define() abort
     return s:source
+endfunction
+
+function! s:source.hooks.on_init(args, context) abort
+    if &filetype !=# 'dirvish'
+        echoerr "'dirvish' unite source can only be used in dirvish buffer"
+    endif
 endfunction
 
 function! s:source.gather_candidates(args, context) abort
@@ -24,8 +31,8 @@ function! s:source.gather_candidates(args, context) abort
 endfunction
 
 let s:source.action_table.dirvish_down = {
-\ 'description' : 'Open the selected path with vim-dirvish way',
-\ 'is_selectable' : 0,
+\   'description' : 'Open the selected path with vim-dirvish way',
+\   'is_selectable' : 0,
 \ }
 
 function! s:source.action_table.dirvish_down.func(candidate) abort
