@@ -1,6 +1,7 @@
 let s:source = {
 \   'name' : 'dirvish',
 \   'description' : 'Incremental search for vim-dirvish',
+\   'syntax' : 'uniteSource__Dirvish',
 \   'default_action' : {'common' : 'dirvish_down'},
 \   'action_table' : {},
 \   'hooks' : {},
@@ -16,6 +17,11 @@ function! s:source.hooks.on_init(args, context) abort
     endif
 endfunction
 
+function! s:source.hooks.on_syntax(args, context) abort
+    syntax match uniteSource__Dirvish_Dir /.*[\/]$/ contained containedin=uniteSource__Dirvish
+    highlight default link uniteSource__Dirvish_Dir Directory
+endfunction
+
 function! s:source.gather_candidates(args, context) abort
     let ret = []
     let lines = getline(1, '$')
@@ -25,7 +31,7 @@ function! s:source.gather_candidates(args, context) abort
         if word ==# ''
             continue
         endif
-        let ret += [{ "word": word, "action__line": i + 1 }]
+        let ret += [{ 'word': word, 'action__line': i + 1 }]
     endfor
     return ret
 endfunction
