@@ -1,0 +1,34 @@
+let s:source = {
+\   'name' : 'dirvish',
+\   'description' : 'Incremental search for vim-dirvish',
+\   'default_action' : {'common' : 'dirvish_down'},
+\   'action_table' : {},
+\ }
+
+function! unite#sources#dirvish#define() abort
+    return s:source
+endfunction
+
+function! s:source.gather_candidates(args, context) abort
+    let ret = []
+    let lines = getline(1, '$')
+    for i in range(len(lines))
+        " fnamemodify(, ':t') is unavailable because of trailing slash
+        let word = matchstr(lines[i], '[^\/]*[\/]\=$')
+        if word ==# ''
+            continue
+        endif
+        let ret += [{ "word": word, "action__line": i + 1 }]
+    endfor
+    return ret
+endfunction
+
+let s:source.action_table.dirvish_down = {
+\ 'description' : 'Open the selected path with vim-dirvish way',
+\ 'is_selectable' : 0,
+\ }
+
+function! s:source.action_table.dirvish_down.func(candidate) abort
+    execute a:candidate.action__line
+    execute 'normal' "\<CR>"
+endfunction
