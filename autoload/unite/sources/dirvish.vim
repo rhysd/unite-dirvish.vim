@@ -43,5 +43,5 @@ let s:source.action_table.dirvish_down = {
 
 function! s:source.action_table.dirvish_down.func(candidate) abort
     execute a:candidate.action__line
-    execute 'normal' "\<CR>"
+    .call dirvish#open('edit', 0)
 endfunction
