@@ -7,6 +7,9 @@ let s:source = {
 \   'hooks' : {},
 \ }
 
+let g:unite_dirvish_single_open_cmd = get(g:, 'unite_dirvish_open_cmd', 'edit')
+let g:unite_dirvish_multi_open_cmd = get(g:, 'unite_dirvish_open_cmd', 'botright vsplit')
+
 function! unite#sources#dirvish#define() abort
     return s:source
 endfunction
@@ -31,17 +34,29 @@ function! s:source.gather_candidates(args, context) abort
         if word ==# ''
             continue
         endif
-        let ret += [{ 'word': word, 'action__line': i + 1 }]
+        let ret += [{ 'word': word, 'action__line': i + 1, 'action__path' : lines[i] }]
     endfor
     return ret
 endfunction
 
 let s:source.action_table.dirvish_down = {
 \   'description' : 'Open the selected path with vim-dirvish way',
-\   'is_selectable' : 0,
+\   'is_selectable' : 1,
 \ }
 
-function! s:source.action_table.dirvish_down.func(candidate) abort
-    execute a:candidate.action__line
-    .call dirvish#open('edit', 0)
+function! s:source.action_table.dirvish_down.func(candidates) abort
+    if empty(a:candidates)
+        return
+    endif
+    if len(a:candidates) == 1
+        execute a:candidates[0].action__line . 'call dirvish#open(g:unite_dirvish_single_open_cmd, 0)'
+        return
+    endif
+    for candidate in a:candidates
+        let p = candidate.action__path
+        if filereadable(p) && !isdirectory(p)
+            execute g:unite_dirvish_multi_open_cmd . ' +wincmd\ p ' . candidate.action__path
+        endif
+    endfor
+    execute 'normal' "\<Plug>(dirvish_quit)"
 endfunction
