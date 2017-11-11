@@ -7,8 +7,8 @@ let s:source = {
 \   'hooks' : {},
 \ }
 
-let g:unite_dirvish_single_open_cmd = get(g:, 'unite_dirvish_open_cmd', 'edit')
-let g:unite_dirvish_multi_open_cmd = get(g:, 'unite_dirvish_open_cmd', 'botright vsplit')
+let g:unite_dirvish_single_open_cmd = get(g:, 'unite_dirvish_single_open_cmd', 'edit')
+let g:unite_dirvish_multi_open_cmd = get(g:, 'unite_dirvish_multi_open_cmd', 'botright vsplit')
 
 function! unite#sources#dirvish#define() abort
     return s:source
