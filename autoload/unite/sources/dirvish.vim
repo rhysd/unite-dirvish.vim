@@ -28,13 +28,18 @@ endfunction
 function! s:source.gather_candidates(args, context) abort
     let ret = []
     let lines = getline(1, '$')
+    let onlydir = index(a:args, 'onlydir') >= 0
     for i in range(len(lines))
+        let line = lines[i]
+        if onlydir && line !~# '[\/]$'
+            continue
+        endif
         " fnamemodify(, ':t') is unavailable because of trailing slash
-        let word = matchstr(lines[i], '[^\/]*[\/]\=$')
+        let word = matchstr(line, '[^\/]*[\/]\=$')
         if word ==# ''
             continue
         endif
-        let ret += [{ 'word': word, 'action__line': i + 1, 'action__path' : lines[i] }]
+        let ret += [{ 'word': word, 'action__line': i + 1, 'action__path' : line }]
     endfor
     return ret
 endfunction
