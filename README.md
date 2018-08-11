@@ -1,18 +1,21 @@
-Source plugin for [unite.vim](https://github.com/Shougo/unite.vim) and [vim-dirvish](https://github.com/justinmk/vim-dirvish). It provides an incremental search in vim-dirvish buffer.
+Source plugin for [unite.vim](https://github.com/Shougo/unite.vim) and [vim-dirvish](https://github.com/justinmk/vim-dirvish).
+It provides an incremental search in vim-dirvish buffer.
 
 Usage:
 ```
 :Unite dirvish
 ```
 
-It may be useful to overwrite original `/` mapping.
+This plugin overwrites original `/` mapping on `dirvish` filetype. You can use unite.vim for
+searching paths in a Dirvish buffer instead of original `/`.
 
-```vim
-augroup dirvish-vimrc
-    autocmd!
-    autocmd FileType dirvish nnoremap <buffer>/ :<C-u>Unite dirvish<CR>
-augroup END
+When you want to search only directories, you can pass `onlydir` option as follows:
+
 ```
+:Unite dirvish:onlydir
+```
+
+This is also mapped to `d/` by default on `dirvish` filetype.
 
 Distributed under [MIT License](https://opensource.org/licenses/MIT).
 
